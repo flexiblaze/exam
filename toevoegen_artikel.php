@@ -33,30 +33,54 @@
     <main class="col-md-10 p-4">
       <h1 class="mb-4">artikel toevoegen</h1>
 
-      <!-- Voorraad Tabel -->
-      <table class="table table-hover table-bordered">
-        <thead class="table-light">
-          <tr>
-            <th scope="col">Selectie</th>
-            <th scope="col">ID</th>
-            <th scope="col">Artikel ID</th>
-            <th scope="col">Locatie</th>
-            <th scope="col">Aantal</th>
-            <th scope="col">Status ID</th>
-            <th scope="col">Ingeboekt Op</th>
-          </tr>
-        </thead>
-        <tbody>
-        <?php
-        // Database verbinding
-        include('backend/db.php');
 
-        ?>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Toevoegen</title>
+</head>
+<body>
+<?      
+include('backend/db.php');
+?>
+    <form method="POST">
+        <input type="text" name="naam" placeholder="Naam" required>
+        <input type="number" name="prijs" placeholder="Prijs" step="0.01" required>
+        <select name="categorie" required>
+            <option value="">Categorie</option>
+            <?php foreach ($categorieen as $categorie) { ?>
+                <option value="<?= $categorie['id']; ?>"><?= htmlspecialchars($categorie['categorie']); ?></option>
+            <?php } ?>
+        </select>
+        <button type="submit">Toevoegen</button>
+    </form>
         </tbody>
       </table>
     </main>
   </div>
 </div>
+
+<?      
+include('backend/db.php');
+
+$query = "SELECT id, categorie FROM categorie";
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+$categorieen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $naam = $_POST['naam'] ?? '';
+    $prijs = $_POST['prijs'] ?? '';
+    $categorie_id = $_POST['categorie'] ?? '';
+
+    if ($naam && $prijs && $categorie_id) {
+        $stmt = $pdo->prepare("INSERT INTO producten (naam, prijs, categorie_id) VALUES (?, ?, ?)");
+        $stmt->execute([$naam, $prijs, $categorie_id]);
+        echo "<p>Product toegevoegd!</p>";
+    }
+}
+?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
