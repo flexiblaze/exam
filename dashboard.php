@@ -26,22 +26,22 @@ $role = $_SESSION['role'];
                 <li class="nav-item"><a class="nav-link text-white" href="#">Kringloop Centrum</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="dashboard.php">Home</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Rollen</a>
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Ritten</a>
                     <ul class="dropdown-menu">
-                        <?php if ($role === 'directie' || $role === 'magazijnmedewerker'): ?>
-                            <li><a class="dropdown-item" href="voorraad.php">Magazijnvoorraad</a></li>
-                            <li><a class="dropdown-item" href="artikelen.php">Artikelen Beheer</a></li>
-                        <?php endif; ?>
-                        <?php if ($role === 'winkelpersoneel' || $role === 'directie'): ?>
-                            <li><a class="dropdown-item" href="klanten.php">Klantenbeheer</a></li>
-                        <?php endif; ?>
-                        <?php if ($role === 'directie'): ?>
-                            <li><a class="dropdown-item" href="gebruikers.php">Gebruikersbeheer</a></li>
-                            <li><a class="dropdown-item" href="opbrengst.php">Opbrengst Verkoop</a></li>
-                        <?php endif; ?>
                         <li><a class="dropdown-item" href="ritplanning.php">Ritten Planning</a></li>
                     </ul>
                 </li>
+                <?php if ($role === 'directie' || $role === 'magazijnmedewerker'): ?>
+                    <li class="nav-item"><a class="nav-link text-white" href="voorraad.php">Magazijnvoorraad</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="artikelen.php">Artikelen Beheer</a></li>
+                <?php endif; ?>
+                <?php if ($role === 'winkelpersoneel' || $role === 'directie'): ?>
+                    <li class="nav-item"><a class="nav-link text-white" href="klanten.php">Klantenbeheer</a></li>
+                <?php endif; ?>
+                <?php if ($role === 'directie'): ?>
+                    <li class="nav-item"><a class="nav-link text-white" href="gebruikers.php">Gebruikersbeheer</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="opbrengst.php">Opbrengst Verkoop</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
         <a href="logout.php" class="btn btn-danger">Uitloggen</a>
