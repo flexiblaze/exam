@@ -1,15 +1,14 @@
-<?php
-$host = "localhost";
-$dbname = "duurzaam";
-$username = "root";  // Pas aan als nodig
-$password = "";  // Pas aan als je een wachtwoord hebt ingesteld
+<?
+
+$host       = 'localhost';
+$database   = 'duurzaam';
+$user       = 'root';
+$password   = '';
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]);
+    $this->connection = new PDO($database . ":host=" . $host . ';port=' . $port, $user, $password);
+    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $this->connection;
 } catch (PDOException $e) {
-    die("Database verbinding mislukt: " . $e->getMessage());
+    echo $e->getMessage();
 }
-?>
