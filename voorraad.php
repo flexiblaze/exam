@@ -18,22 +18,13 @@
           <a class="nav-link text-dark" href="#">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="#">Hoofdpagina</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="#">Persoonsgegevens</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="#">Klantgegevens</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link text-dark" href="#">Voorraadbeheer</a>
-          <li class="nav-item">
-          <a class="nav-link text-dark" href="#">Opbrengst verkopen</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="#">Rit planning</a>
+          <a class="nav-link text-dark" href="#">Ritplanning</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="#">Instellingen</a>
         </li>
       </ul>
     </nav>
@@ -41,56 +32,63 @@
     <!-- Content -->
     <main class="col-md-10 p-4">
       <h1 class="mb-4">Voorraad Beheer</h1>
-      
-      <!-- Zoeken en Acties -->
-      <div class="d-flex justify-content-between mb-3">
-        <input type="text" class="form-control w-25" placeholder="Zoeken">
-        <button class="btn btn-primary">Nieuwe Items</button>
-      </div>
 
+      <!-- Zoekbalk -->
+      <div class="mb-3">
+        <input type="text" class="form-control w-50" placeholder="Zoek in voorraad...">
+      </div>
+      
       <!-- Voorraad Tabel -->
       <table class="table table-hover table-bordered">
         <thead class="table-light">
           <tr>
             <th scope="col">Selectie</th>
             <th scope="col">ID</th>
-            <th scope="col">Categorie</th>
-            <th scope="col">Beschrijving</th>
-            <th scope="col">Hoeveelheid</th>
-            <th scope="col">Acties</th>
+            <th scope="col">Artikel ID</th>
+            <th scope="col">Locatie</th>
+            <th scope="col">Aantal</th>
+            <th scope="col">Status ID</th>
+            <th scope="col">Ingeboekt Op</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td>1</td>
-            <td>Muts</td>
-            <td>Wintermuts blauw</td>
-            <td>3</td>
-            <td>
-              <button class="btn btn-sm btn-secondary">...</button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td>2</td>
-            <td>Sokken</td>
-            <td>Sportsokken wit</td>
-            <td>10</td>
-            <td>
-              <button class="btn btn-sm btn-secondary">...</button>
-            </td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td>3</td>
-            <td>T-shirt</td>
-            <td>Zwart basic T-shirt</td>
-            <td>7</td>
-            <td>
-              <button class="btn btn-sm btn-secondary">...</button>
-            </td>
-          </tr>
+        <?php
+        // Database verbinding
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "duurzaam";
+
+        try {
+            $dsn = "mysql:host=$servername;dbname=$dbname;charset=utf8mb4";
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ];
+
+            $pdo = new PDO($dsn, $username, $password, $options);
+            $stmt = $pdo->query("SELECT id, artikel_id, locatie, aantal, status_id, ingeboekt_op FROM voorraad");
+
+            if ($stmt->rowCount() > 0) {
+                while ($row = $stmt->fetch()) {
+                    echo "<tr>";
+                    echo "<td><input type='checkbox'></td>";
+                    echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['artikel_id']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['locatie']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['aantal']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['status_id']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['ingeboekt_op']) . "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='7'>Geen gegevens gevonden</td></tr>";
+            }
+
+        } catch (PDOException $e) {
+            echo "<tr><td colspan='7'>Fout bij databaseverbinding: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
+        }
+        ?>
         </tbody>
       </table>
     </main>
