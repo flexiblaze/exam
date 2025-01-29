@@ -9,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $role = $_SESSION['role'];
 
-// Alleen directie en magazijnmedewerkers mogen voorraad beheren
 if ($role !== 'directie' && $role !== 'magazijnmedewerker') {
     header('Location: dashboard.php');
     exit;
@@ -121,31 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_artikel'])) {
                     <td><?= htmlspecialchars($item['kleur']); ?></td>
                     <td><?= htmlspecialchars($item['afmeting']); ?></td>
                     <td><?= htmlspecialchars($item['ean_nummer']); ?></td>
-                    <td>
-                        <form method="POST" style="display:inline;">
-                            <input type="hidden" name="voorraad_id" value="<?= $item['id']; ?>">
-                            <input type="number" name="nieuw_aantal" class="form-control form-control-sm d-inline" style="width: 70px;" value="<?= $item['aantal']; ?>">
-                            <button type="submit" name="update_aantal" class="btn btn-success btn-sm">Opslaan</button>
-                        </form>
-                    </td>
+                    <td><?= htmlspecialchars($item['aantal']); ?></td>
                     <td><?= htmlspecialchars($item['locatie']); ?></td>
                     <td>€ <?= number_format($item['prijs_ex_btw'], 2, ',', '.'); ?></td>
-                    <td>
-                        <form method="POST" style="display:inline;">
-                            <input type="hidden" name="voorraad_id" value="<?= $item['id']; ?>">
-                            <select name="reparatie_nodig" class="form-select form-select-sm d-inline" style="width: 100px;">
-                                <option value="1" <?= $item['reparatie_nodig'] == 1 ? 'selected' : ''; ?>>Ja</option>
-                                <option value="0" <?= $item['reparatie_nodig'] == 0 ? 'selected' : ''; ?>>Nee</option>
-                            </select>
-                    </td>
-                    <td>
-                            <select name="verkoop_gereed" class="form-select form-select-sm d-inline" style="width: 100px;">
-                                <option value="1" <?= $item['verkoop_gereed'] == 1 ? 'selected' : ''; ?>>Ja</option>
-                                <option value="0" <?= $item['verkoop_gereed'] == 0 ? 'selected' : ''; ?>>Nee</option>
-                            </select>
-                            <button type="submit" name="update_status" class="btn btn-warning btn-sm">Opslaan</button>
-                        </form>
-                    </td>
+                    <td><?= $item['reparatie_nodig'] ? 'Ja' : 'Nee'; ?></td>
+                    <td><?= $item['verkoop_gereed'] ? 'Ja' : 'Nee'; ?></td>
                     <td>
                         <form method="POST" style="display:inline;">
                             <input type="hidden" name="voorraad_id" value="<?= $item['id']; ?>">
