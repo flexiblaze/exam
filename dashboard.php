@@ -23,7 +23,7 @@ $role = $_SESSION['role'];
     <header class="d-flex justify-content-between align-items-center p-3 bg-primary text-white">
         <nav>
             <ul class="nav">
-                <li class="nav-item"><a class="nav-link text-white" href="#">Kringloop Centrum</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="#">Kringloop Centrum</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="dashboard.php">Home</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Ritten</a>
@@ -44,7 +44,18 @@ $role = $_SESSION['role'];
                 <?php endif; ?>
             </ul>
         </nav>
-        <a href="logout.php" class="btn btn-danger">Uitloggen</a>
+        <div class="d-flex align-items-center">
+            <!-- ✅ Dropdown menu voor de gebruiker -->
+            <div class="dropdown me-3">
+                <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <?= htmlspecialchars($_SESSION['username']); ?> (<?= htmlspecialchars($_SESSION['role']); ?>)
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="wachtwoord_veranderen.php">Wachtwoord Veranderen</a></li>
+                    <li><a class="dropdown-item text-danger" href="logout.php">Uitloggen</a></li>
+                </ul>
+            </div>
+        </div>
     </header>
 
     <main class="container mt-4">
@@ -114,6 +125,11 @@ $role = $_SESSION['role'];
             <?php endif; ?>
         </div>
     </main>
+
+    <!-- ✅ Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; <?= date("Y"); ?> Kringloop Centrum Duurzaam | Alle rechten voorbehouden</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
