@@ -1,0 +1,109 @@
+Kringloop Centrum Duurzaam - Webapplicatie
+
+📌 Over dit project
+
+Deze webapplicatie is ontwikkeld voor Kringloop Centrum Duurzaam om het beheer van artikelen, voorraad, ritten, klanten, gebruikers en opbrengsten te vergemakkelijken. De applicatie zorgt ervoor dat alle gegevens centraal geregistreerd worden, waardoor het werk efficiënter wordt en fouten worden verminderd.
+
+🚀 Functionaliteiten
+
+Gebruikersbeheer: Directie kan nieuwe gebruikers toevoegen en beheren.
+
+Voorraadbeheer: Beheer van magazijnartikelen, prijzen en locaties.
+
+Artikelbeheer: Toevoegen, bewerken en bekijken van artikelen.
+
+Ritplanning: Inplannen en beheren van ritten voor het ophalen en bezorgen.
+
+Klantenbeheer: Registreren en beheren van klantgegevens.
+
+Opbrengstbeheer: Overzicht van verkochte artikelen en opbrengsten.
+
+Beveiligd inlogsysteem: Gebruikers kunnen inloggen met hun account en hun wachtwoord wijzigen.
+
+📂 Projectstructuur
+
+project-folder/
+│── db.php              # Databaseverbinding
+│── login.php           # Inlogpagina
+│── dashboard.php       # Dynamisch dashboard op basis van rol
+│── logout.php          # Uitlogfunctionaliteit
+│── auth.php            # Beveiliging voor pagina's
+│── gebruikers.php      # Gebruikersbeheer (alleen directie)
+│── voorraadbeheer.php  # Beheer van magazijnvoorraad
+│── artikelenbeheer.php # Beheer van artikelen
+│── ritplanning.php     # Ritplanning voor chauffeurs
+│── klanten.php         # Klantenbeheer
+│── opbrengst.php       # Opbrengstbeheer
+│── sidebar.php         # Linker navigatiebalk
+│── navbar.php          # Header navigatiebalk
+│── wachtwoord_veranderen.php  # Wachtwoord wijzigen
+└── duurzaam.sql        # Databasebestand (importeren in phpMyAdmin)
+
+🛠 Installatie & Configuratie
+
+Database instellen:
+
+Importeer duurzaam.sql in phpMyAdmin of een MySQL database.
+
+Controleer of de tabellen correct zijn aangemaakt.
+
+Webserver instellen:
+
+Gebruik XAMPP of een andere lokale server.
+
+Plaats de bestanden in de juiste directory (htdocs/exam_opdracht/).
+
+Configuratie aanpassen:
+
+Open db.php en pas de database instellingen aan indien nodig:
+
+$host = 'localhost';
+$dbname = 'duurzaam';
+$username = 'root';
+$password = '';
+
+Inloggen:
+
+Standaard gebruikers staan in de database met hun rollen (Directie, Magazijnmedewerker, Winkelpersoneel, Chauffeur).
+
+Wachtwoorden zijn gehashed met bcrypt.
+
+📌 Rollen & Toegangsrechten
+
+Rol
+
+Toegang tot
+
+Directie
+
+Voorraadbeheer, Gebruikersbeheer, Ritplanning, Klantenbeheer, Opbrengstbeheer
+
+Magazijnmedewerker
+
+Voorraadbeheer, Artikelenbeheer
+
+Winkelpersoneel
+
+Klantenbeheer, Ritplanning
+
+Chauffeur
+
+Alleen Ritplanning
+
+📌 Belangrijke Bestanden
+
+db.php: Verbindingsbestand met MySQL database.
+
+auth.php: Controleert of gebruikers zijn ingelogd en beschermt pagina's.
+
+sidebar.php & navbar.php: Standaard navigatiebalken voor consistente UI.
+
+✅ Toekomstige Verbeteringen
+
+Automatische rapportages genereren voor directie.
+
+Bestellingen & Leveringen registreren.
+
+Verbeterde UX/UI met AJAX-functionaliteiten.
+
+📌 Laatste update: 2025-01-29
