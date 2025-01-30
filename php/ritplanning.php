@@ -61,6 +61,7 @@ if (isset($_GET['date_from']) && isset($_GET['date_to'])) {
     $date_filter = "WHERE afspraak_op BETWEEN '$date_from' AND '$date_to'";
 }
 
+
 $ritten = $pdo->query("
     SELECT p.id, a.naam AS artikel, k.naam AS klant, p.kenteken, p.ophalen_of_bezorgen, p.afspraak_op 
     FROM planning p

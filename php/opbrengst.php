@@ -32,6 +32,7 @@ if ($datum_van && $datum_tot) {
     $params[] = $datum_tot;
 }
 
+//query voor het soorteren op datum verkocht
 $query .= " ORDER BY v.verkocht_op DESC";
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
