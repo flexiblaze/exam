@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['gebruikersnaam'];
             $_SESSION['role'] = $user['rollen'];
-            header('Location: dashboard.php');
+            header('Location: php/dashboard.php');
             exit;
         } else {
             $error = "Onjuist wachtwoord of gebruiker niet gevonden.";

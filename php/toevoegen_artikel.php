@@ -42,7 +42,7 @@
 </head>
 <body>
 <?      
-include('backend/db.php');
+include('../backend/db.php');
 ?>
     <form method="POST">
         <input type="text" name="naam" placeholder="Naam" required>
@@ -62,7 +62,7 @@ include('backend/db.php');
 </div>
 
 <?      
-include('backend/db.php');
+include('../backend/db.php');
 
 $query = "SELECT id, categorie FROM categorie";
 $stmt = $pdo->prepare($query);

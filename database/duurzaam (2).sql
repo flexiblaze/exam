@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 29 jan 2025 om 15:08
+-- Gegenereerd op: 30 jan 2025 om 09:09
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -36,16 +36,21 @@ CREATE TABLE `artikel` (
   `afmeting` varchar(100) NOT NULL,
   `aantal` int(11) NOT NULL,
   `ean_nummer` varchar(13) NOT NULL,
-  `prijs_ex_btw` decimal(10,2) NOT NULL
+  `prijs_ex_btw` decimal(10,2) NOT NULL,
+  `prijs` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `artikel`
 --
 
-INSERT INTO `artikel` (`id`, `categorie_id`, `naam`, `merk`, `kleur`, `afmeting`, `aantal`, `ean_nummer`, `prijs_ex_btw`) VALUES
-(2, 2, 'omer', 'merk', 'blauw', '12', 2, '12312313212', 12.00),
-(3, 3, 'Omer', '1', 'rood', '12', 12, '123112', 12313.00);
+INSERT INTO `artikel` (`id`, `categorie_id`, `naam`, `merk`, `kleur`, `afmeting`, `aantal`, `ean_nummer`, `prijs_ex_btw`, `prijs`) VALUES
+(1, 1, 'Tafel', '', '', '', 0, '', 0.00, 0.00),
+(2, 2, 'omer', 'merk', 'blauw', '12', 2, '12312313212', 12.00, 0.00),
+(7, 7, 'dq', '12', '', '', 0, '2063879154', 23.00, 0.00),
+(8, 6, 'Omer', '23', '', '', 0, '12323', 12.00, 0.00),
+(9, 6, 'Omer', '23', '', '', 0, '6517894320', 234.00, 0.00),
+(10, 6, 'dq', 'merk', '', '', 0, '131213', 0.00, 123.00);
 
 -- --------------------------------------------------------
 
@@ -65,7 +70,21 @@ CREATE TABLE `categorie` (
 INSERT INTO `categorie` (`id`, `categorie`) VALUES
 (1, 'ded'),
 (2, 'voorbeeld'),
-(3, 'ded');
+(3, 'ded'),
+(4, 'Kleding'),
+(5, 'Meubels'),
+(6, 'Bedden'),
+(7, 'Kledingkasten'),
+(8, 'Spiegels'),
+(9, 'Kapstokken'),
+(10, 'Garderobekasten'),
+(11, 'Schoenenkasten'),
+(12, 'Witgoed'),
+(13, 'Bruingoed'),
+(14, 'Grijsgoed'),
+(15, 'Glazen, Borden en Bestek'),
+(16, 'Boeken'),
+(17, 'ew');
 
 -- --------------------------------------------------------
 
@@ -104,7 +123,8 @@ INSERT INTO `gebruiker` (`id`, `gebruikersnaam`, `wachtwoord`, `rollen`, `is_gev
 (51, 'chauffeur3', '$2y$10$mr9kh9DHaNrkTEsuxl34Z.h8HpcNgsb1FiqCyKRRifMtO/vd4ERNW', 'chauffeur', 1),
 (52, 'chauffeur4', '$2y$10$EMi1CtCrDykaPU1KytMjqO3UnWivgEbbcH4SsPv3LiddOYLmpdvV2', 'chauffeur', 1),
 (53, 'chauffeur5', '$2y$10$Nv8d5xPzcECBZxqbg7xhv.TdUxIQ4VnV4i56UicNoaY1rwTOcRUeW', 'chauffeur', 1),
-(54, 'chauffeur6', '$2y$10$orLM4flCfdm2zbYwTxA2VeJj3jOnARIaST3eTimvYjWzktXuYTBb6', 'chauffeur', 1);
+(54, 'chauffeur6', '$2y$10$orLM4flCfdm2zbYwTxA2VeJj3jOnARIaST3eTimvYjWzktXuYTBb6', 'chauffeur', 1),
+(55, 'w', '$2y$10$/oSs7ioT.U94Ft6xCTIcXOz.sfAwKHxPCIrexSPt2DIzw28oXvAri', 'magazijnmedewerker', 1);
 
 -- --------------------------------------------------------
 
@@ -143,6 +163,15 @@ CREATE TABLE `planning` (
   `afspraak_op` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `planning`
+--
+
+INSERT INTO `planning` (`id`, `artikel_id`, `klant_id`, `kenteken`, `ophalen_of_bezorgen`, `afspraak_op`) VALUES
+(5, 1, 2, 'e', 'bezorgen', '2025-01-29 17:34:00'),
+(6, 1, 2, 'e', 'bezorgen', '2025-01-29 17:34:00'),
+(7, 2, 2, 'q', 'ophalen', '2025-01-29 15:47:00');
+
 -- --------------------------------------------------------
 
 --
@@ -154,6 +183,19 @@ CREATE TABLE `status` (
   `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Gegevens worden geëxporteerd voor tabel `status`
+--
+
+INSERT INTO `status` (`id`, `status`) VALUES
+(1, 'Op voorraad'),
+(2, 'Gereserveerd'),
+(3, 'Niet beschikbaar'),
+(4, 'Beschikbaar'),
+(5, 'Niet beschikbaar'),
+(6, 'Ter reparatie'),
+(7, 'Verkocht');
+
 -- --------------------------------------------------------
 
 --
@@ -164,7 +206,8 @@ CREATE TABLE `verkopen` (
   `id` int(11) NOT NULL,
   `klant_id` int(11) NOT NULL,
   `artikel_id` int(11) NOT NULL,
-  `verkocht_op` datetime NOT NULL
+  `verkocht_op` datetime NOT NULL,
+  `prijs` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -182,8 +225,21 @@ CREATE TABLE `voorraad` (
   `verkoop_gereed` tinyint(1) NOT NULL DEFAULT 0,
   `status_id` int(11) NOT NULL,
   `ingeboekt_op` datetime NOT NULL,
-  `te_koop` tinyint(1) NOT NULL DEFAULT 1
+  `te_koop` tinyint(1) NOT NULL DEFAULT 1,
+  `prijs` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `voorraad`
+--
+
+INSERT INTO `voorraad` (`id`, `artikel_id`, `locatie`, `aantal`, `reparatie_nodig`, `verkoop_gereed`, `status_id`, `ingeboekt_op`, `te_koop`, `prijs`) VALUES
+(2, 1, 'hier', 1, 0, 1, 1, '2025-01-30 00:41:13', 1, 12.00),
+(3, 1, 'hier', 2, 0, 0, 1, '2025-01-30 01:09:30', 1, 1312.00),
+(4, 1, 'hier', 2, 0, 0, 1, '2025-01-30 01:09:52', 1, 12.00),
+(13, 7, 'hier', 2, 0, 0, 1, '2025-01-30 02:46:40', 1, 123.00),
+(14, 1, 'hier', 12, 0, 0, 1, '2025-01-30 02:49:34', 1, 12.00),
+(15, 7, 'hier', 2, 0, 0, 1, '2025-01-30 09:09:09', 1, 23.00);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -253,19 +309,19 @@ ALTER TABLE `voorraad`
 -- AUTO_INCREMENT voor een tabel `artikel`
 --
 ALTER TABLE `artikel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT voor een tabel `categorie`
 --
 ALTER TABLE `categorie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT voor een tabel `gebruiker`
 --
 ALTER TABLE `gebruiker`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT voor een tabel `klant`
@@ -277,13 +333,13 @@ ALTER TABLE `klant`
 -- AUTO_INCREMENT voor een tabel `planning`
 --
 ALTER TABLE `planning`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT voor een tabel `status`
 --
 ALTER TABLE `status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT voor een tabel `verkopen`
@@ -295,7 +351,7 @@ ALTER TABLE `verkopen`
 -- AUTO_INCREMENT voor een tabel `voorraad`
 --
 ALTER TABLE `voorraad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Beperkingen voor geëxporteerde tabellen

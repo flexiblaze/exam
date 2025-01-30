@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'db.php';
+require '../backend/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -72,7 +72,7 @@ $voorraad = $pdo->query("
             <li class="nav-item"><a href="voorraadbeheer.php" class="nav-link text-primary">📦 Voorraadbeheer</a></li>
             <li class="nav-item"><a href="gebruikers.php" class="nav-link text-white">👤 Gebruikersbeheer</a></li>
             <li class="nav-item"><a href="opbrengst.php" class="nav-link text-white">💰 Opbrengst</a></li>
-            <li class="nav-item mt-4"><a href="logout.php" class="btn btn-danger w-100">🚪 Afmelden</a></li>
+            <li class="nav-item mt-4"><a href="../backend/logout.php" class="btn btn-danger w-100">🚪 Afmelden</a></li>
         </ul>
     </nav>
 
