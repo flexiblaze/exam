@@ -32,8 +32,8 @@ $role = $_SESSION['role'];
                     </ul>
                 </li>
                 <?php if ($role === 'directie' || $role === 'magazijnmedewerker'): ?>
-                    <li class="nav-item"><a class="nav-link text-white" href="voorraad.php">Magazijnvoorraad</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="artikelen.php">Artikelen Beheer</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="voorraadbeheer.php">Voorraad</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="artikelenbeheer.php">Artikelen Beheer</a></li>
                 <?php endif; ?>
                 <?php if ($role === 'winkelpersoneel' || $role === 'directie'): ?>
                     <li class="nav-item"><a class="nav-link text-white" href="klanten.php">Klantenbeheer</a></li>
@@ -65,9 +65,9 @@ $role = $_SESSION['role'];
             <div class="col">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h2 class="card-title">Magazijnvoorraad</h2>
-                        <p class="card-text">Bekijk en beheer de voorraad in het magazijn.</p>
-                        <a href="voorraad.php" class="btn btn-primary">Magazijnvoorraad</a>
+                        <h2 class="card-title">Voorraad Beheer</h2>
+                        <p class="card-text">Bekijk en beheer de voorraad</p>
+                        <a href="voorraadbeheer.php" class="btn btn-primary">Voorraad</a>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@ $role = $_SESSION['role'];
                     <div class="card-body">
                         <h2 class="card-title">Artikelen Beheer</h2>
                         <p class="card-text">Beheer alle artikelen en voorraadstatus.</p>
-                        <a href="artikelen.php" class="btn btn-primary">Artikelen Beheer</a>
+                        <a href="artikelenbeheer.php" class="btn btn-primary">Artikelen Beheer</a>
                     </div>
                 </div>
             </div>
