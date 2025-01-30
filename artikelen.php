@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php';
+require 'backend/db.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -9,80 +9,32 @@ if (!isset($_SESSION['user_id'])) {
 
 $role = $_SESSION['role'];
 
-// Alleen directie en magazijnmedewerkers mogen artikelen beheren
 if ($role !== 'directie' && $role !== 'magazijnmedewerker') {
     header('Location: dashboard.php');
     exit;
 }
 
-// Categorieën ophalen
-$categorie_stmt = $pdo->query("SELECT * FROM categorie ORDER BY categorie ASC");
-$categorie_result = $categorie_stmt->fetchAll();
+// Zoekfunctionaliteit
+$search_query = "";
+$params = [];
 
-// Artikelen ophalen
-$stmt = $pdo->query("SELECT a.id, a.naam, a.prijs_ex_btw, a.merk, a.kleur, a.afmeting, a.aantal, a.ean_nummer, c.categorie 
-                     FROM artikel a
-                     JOIN categorie c ON a.categorie_id = c.id
-                     ORDER BY c.categorie, a.naam");
-$artikelen = $stmt->fetchAll();
-
-// Artikel toevoegen
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_artikel'])) {
-    $categorie_id = $_POST['categorie_id'];
-    $naam = $_POST['naam'];
-    $prijs_ex_btw = $_POST['prijs_ex_btw'];
-    $merk = $_POST['merk'];
-    $kleur = $_POST['kleur'];
-    $afmeting = $_POST['afmeting'];
-    $aantal = $_POST['aantal'];
-    $ean_nummer = $_POST['ean_nummer'];
-
-    $stmt = $pdo->prepare("INSERT INTO artikel (categorie_id, naam, prijs_ex_btw, merk, kleur, afmeting, aantal, ean_nummer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$categorie_id, $naam, $prijs_ex_btw, $merk, $kleur, $afmeting, $aantal, $ean_nummer]);
-
-    header('Location: artikelen.php');
-    exit;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
+    $search = '%' . $_POST['search'] . '%';
+    $search_query = "WHERE a.naam LIKE ? OR a.ean_nummer LIKE ?";
+    $params = [$search, $search];
 }
 
-// Artikel verwijderen
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_artikel'])) {
-    $artikel_id = $_POST['artikel_id'];
-    $stmt = $pdo->prepare("DELETE FROM artikel WHERE id = ?");
-    $stmt->execute([$artikel_id]);
+// Artikel- en Voorraadgegevens ophalen
+$query = "SELECT a.id AS artikel_id, a.naam, a.merk, a.kleur, a.afmeting, a.ean_nummer, a.prijs_ex_btw, 
+                 v.id AS voorraad_id, v.aantal, v.locatie, v.reparatie_nodig, v.verkoop_gereed, v.ingeboekt_op
+          FROM artikel a
+          LEFT JOIN voorraad v ON a.id = v.artikel_id
+          $search_query
+          ORDER BY a.naam";
 
-    header('Location: artikelen.php');
-    exit;
-}
-
-// Artikel bewerken
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_artikel'])) {
-    $artikel_id = $_POST['artikel_id'];
-    $categorie_id = $_POST['categorie_id'];
-    $naam = $_POST['naam'];
-    $prijs_ex_btw = $_POST['prijs_ex_btw'];
-    $merk = $_POST['merk'];
-    $kleur = $_POST['kleur'];
-    $afmeting = $_POST['afmeting'];
-    $aantal = $_POST['aantal'];
-    $ean_nummer = $_POST['ean_nummer'];
-
-    $stmt = $pdo->prepare("UPDATE artikel SET categorie_id = ?, naam = ?, prijs_ex_btw = ?, merk = ?, kleur = ?, afmeting = ?, aantal = ?, ean_nummer = ? WHERE id = ?");
-    $stmt->execute([$categorie_id, $naam, $prijs_ex_btw, $merk, $kleur, $afmeting, $aantal, $ean_nummer, $artikel_id]);
-
-    header('Location: artikelen.php');
-    exit;
-}
-
-// Categorie toevoegen
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_categorie'])) {
-    $categorie = $_POST['categorie'];
-
-    $stmt = $pdo->prepare("INSERT INTO categorie (categorie) VALUES (?)");
-    $stmt->execute([$categorie]);
-
-    header('Location: artikelen.php');
-    exit;
-}
+$stmt = $pdo->prepare($query);
+$stmt->execute($params);
+$artikelen_voorraad = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -90,99 +42,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_categorie'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artikelen Beheer</title>
+    <title>Magazijnvoorraad & Artikelen Beheer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-4">
-        <h2 class="text-center">Artikelen Beheer</h2>
+        <h2 class="text-center">Magazijnvoorraad & Artikelen Overzicht</h2>
 
-        <!-- Categorie toevoegen -->
-        <h4>Nieuwe categorie toevoegen</h4>
+        <!-- Zoekfunctie -->
         <form method="POST" class="mb-4">
             <div class="row g-3">
-                <div class="col-md-6">
-                    <input type="text" name="categorie" class="form-control" placeholder="Nieuwe categorie" required>
+                <div class="col-md-8">
+                    <input type="text" name="search" class="form-control" placeholder="Zoek op artikelnaam of EAN-nummer">
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" name="add_categorie" class="btn btn-secondary">Categorie Toevoegen</button>
+                <div class="col-md-4">
+                    <button type="submit" name="search_submit" class="btn btn-primary w-100">Zoeken</button>
                 </div>
             </div>
         </form>
 
-        <!-- Artikel toevoegen -->
-        <h4>Nieuw artikel toevoegen</h4>
-        <form method="POST" class="mb-4">
-            <div class="row g-3">
-                <div class="col-md-2">
-                    <select name="categorie_id" class="form-select" required>
-                        <option value="">Selecteer Categorie</option>
-                        <?php foreach ($categorie_result as $categorie): ?>
-                            <option value="<?= $categorie['id']; ?>"><?= htmlspecialchars($categorie['categorie']); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <input type="text" name="naam" class="form-control" placeholder="Artikelnaam" required>
-                </div>
-                <div class="col-md-1">
-                    <input type="number" step="0.01" name="prijs_ex_btw" class="form-control" placeholder="Prijs (ex. BTW)" required>
-                </div>
-                <div class="col-md-1">
-                    <input type="text" name="merk" class="form-control" placeholder="Merk" required>
-                </div>
-                <div class="col-md-1">
-                    <input type="text" name="kleur" class="form-control" placeholder="Kleur" required>
-                </div>
-                <div class="col-md-1">
-                    <input type="text" name="afmeting" class="form-control" placeholder="Afmeting" required>
-                </div>
-                <div class="col-md-1">
-                    <input type="number" name="aantal" class="form-control" placeholder="Aantal" required>
-                </div>
-                <div class="col-md-2">
-                    <input type="text" name="ean_nummer" class="form-control" placeholder="EAN-nummer" required>
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" name="add_artikel" class="btn btn-primary">Toevoegen</button>
-                </div>
-            </div>
-        </form>
-
-        <!-- Artikelenlijst -->
-        <h4>Geregistreerde Artikelen</h4>
+        <!-- Voorraad en Artikelen overzicht -->
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Categorie</th>
-                    <th>Naam</th>
+                    <th>Artikel</th>
                     <th>Merk</th>
                     <th>Kleur</th>
                     <th>Afmeting</th>
+                    <th>EAN</th>
                     <th>Aantal</th>
-                    <th>EAN-nummer</th>
+                    <th>Locatie</th>
                     <th>Prijs (ex. BTW)</th>
+                    <th>Reparatie Nodig</th>
+                    <th>Verkoop Gereed</th>
+                    <th>Ingeboekt Op</th>
                     <th>Acties</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($artikelen as $artikel): ?>
+                <?php foreach ($artikelen_voorraad as $item): ?>
                 <tr>
-                    <td><?= htmlspecialchars($artikel['categorie']); ?></td>
-                    <td><?= htmlspecialchars($artikel['naam']); ?></td>
-                    <td><?= htmlspecialchars($artikel['merk']); ?></td>
-                    <td><?= htmlspecialchars($artikel['kleur']); ?></td>
-                    <td><?= htmlspecialchars($artikel['afmeting']); ?></td>
-                    <td><?= htmlspecialchars($artikel['aantal']); ?></td>
-                    <td><?= htmlspecialchars($artikel['ean_nummer']); ?></td>
-                    <td>€ <?= number_format($artikel['prijs_ex_btw'], 2, ',', '.'); ?></td>
-                    <td><form method="POST"><input type="hidden" name="artikel_id" value="<?= $artikel['id']; ?>"><button type="submit" name="delete_artikel" class="btn btn-danger btn-sm">Verwijderen</button></form></td>
+                    <td><?= htmlspecialchars($item['naam']); ?></td>
+                    <td><?= htmlspecialchars($item['merk']); ?></td>
+                    <td><?= htmlspecialchars($item['kleur']); ?></td>
+                    <td><?= htmlspecialchars($item['afmeting']); ?></td>
+                    <td><?= htmlspecialchars($item['ean_nummer']); ?></td>
+                    <td><?= $item['aantal'] !== null ? htmlspecialchars($item['aantal']) : 'N/A'; ?></td>
+                    <td><?= $item['locatie'] !== null ? htmlspecialchars($item['locatie']) : 'N/A'; ?></td>
+                    <td>€ <?= number_format($item['prijs_ex_btw'], 2, ',', '.'); ?></td>
+                    <td><?= $item['reparatie_nodig'] ? 'Ja' : 'Nee'; ?></td>
+                    <td><?= $item['verkoop_gereed'] ? 'Ja' : 'Nee'; ?></td>
+                    <td><?= $item['ingeboekt_op'] ? htmlspecialchars($item['ingeboekt_op']) : 'N/A'; ?></td>
+                    <td>
+                        <?php if ($item['voorraad_id']): ?>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="voorraad_id" value="<?= $item['voorraad_id']; ?>">
+                            <button type="submit" name="delete_artikel" class="btn btn-danger btn-sm">Verwijderen</button>
+                        </form>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
 
-        <a href="dashboard.php" class="btn btn-secondary">Terug naar Dashboard</a>
+        <a href="dashboard.php" class="btn btn-secondary mt-3">Terug naar Dashboard</a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
