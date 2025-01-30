@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'db.php';
+require '../backend/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -25,7 +25,7 @@ $rol = $gebruiker['rollen'] ?? 'Onbekend';
         <li><a href="artikelenbeheer.php"><i class="fas fa-list"></i> Artikelenbeheer</a></li>
         <li><a href="gebruikers.php"><i class="fas fa-users"></i> Gebruikersbeheer</a></li>
         <li><a href="opbrengst.php"><i class="fas fa-chart-bar"></i> Opbrengst</a></li>
-        <li class="logout"><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Afmelden</a></li>
+        <li class="logout"><a href="../backend/logout.php"><i class="fas fa-sign-out-alt"></i> Afmelden</a></li>
     </ul>
 </div>
 

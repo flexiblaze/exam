@@ -1,9 +1,9 @@
 <?php
-require 'db.php';
-include 'sidebar.php'; // Voeg de sidebar toe
+session_start();
+require '../backend/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -32,6 +32,7 @@ if ($datum_van && $datum_tot) {
     $params[] = $datum_tot;
 }
 
+//query voor het soorteren op datum verkocht
 $query .= " ORDER BY v.verkocht_op DESC";
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);

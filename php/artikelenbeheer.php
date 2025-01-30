@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require '../backend/db.php';
 include 'sidebar.php'; // Voeg de sidebar toe
 
 // Zoekfunctie

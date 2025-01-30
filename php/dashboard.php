@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'db.php';
+require '../backend/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -19,11 +19,19 @@ $role = $_SESSION['role'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="styling/style.css" rel="stylesheet">
 </head>
+
+
 <body>
     <header class="d-flex justify-content-between align-items-center p-3 bg-primary text-white">
+
+
         <nav>
             <ul class="nav">
+<<<<<<< HEAD:dashboard.php
                 <li class="nav-item"><a class="nav-link text-white fw-bold" href="#">Kringloop Centrum</a></li>
+=======
+                <li class="nav-item"><a class="nav-link text-white">Kringloop Centrum</a></li>
+>>>>>>> dd5e7204265ca1ffe676f2bf9623e7c8330b2cd3:php/dashboard.php
                 <li class="nav-item"><a class="nav-link text-white" href="dashboard.php">Home</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Ritten</a>
@@ -44,6 +52,7 @@ $role = $_SESSION['role'];
                 <?php endif; ?>
             </ul>
         </nav>
+<<<<<<< HEAD:dashboard.php
         <div class="d-flex align-items-center">
             <!-- ✅ Dropdown menu voor de gebruiker -->
             <div class="dropdown me-3">
@@ -56,6 +65,11 @@ $role = $_SESSION['role'];
                 </ul>
             </div>
         </div>
+=======
+
+
+        <a href="../backend/logout.php" class="btn btn-danger">Uitloggen</a>
+>>>>>>> dd5e7204265ca1ffe676f2bf9623e7c8330b2cd3:php/dashboard.php
     </header>
 
     <main class="container mt-4">

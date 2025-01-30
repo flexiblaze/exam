@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'db.php';
+require '../backend/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -60,6 +60,7 @@ if (isset($_GET['date_from']) && isset($_GET['date_to'])) {
     $date_to = $_GET['date_to'];
     $date_filter = "WHERE afspraak_op BETWEEN '$date_from' AND '$date_to'";
 }
+
 
 $ritten = $pdo->query("
     SELECT p.id, a.naam AS artikel, k.naam AS klant, p.kenteken, p.ophalen_of_bezorgen, p.afspraak_op 
